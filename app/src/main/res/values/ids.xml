@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="shimmer_view_container" type="id"/>
+    <item name="preloader" type="id"/>
+    <item name="preloader_container" type="id"/>
+    <item name="placeholder" type="id"/>
+    <item name="error_container" type="id"/>
+    <item name="list" type="id"/>
+    <item name="refreshLayout" type="id"/>
+    <item name="preview" type="id"/>
+    <item name="description" type="id"/>
+    <item name="salary" type="id"/>
+    <item name="toolbar_title" type="id"/>
+    <item name="item" type="id"/>
+    <item name="item_container" type="id"/>
+    <item name="guideline" type="id"/>
+    <item name="description_more" type="id"/>
+</resources>
