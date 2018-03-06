@@ -11,5 +11,4 @@ This repository contains a detailed sample app that implements MVP architecture 
  - Espresso
  - Robolectric
 
-
-![Screenshot](https://raw.githubusercontent.com/limnid/android-mvp/master/misc/intro.gif =250x)
+<img src="https://raw.githubusercontent.com/limnid/android-mvp/master/misc/intro.gif" width="250">
