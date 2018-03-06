@@ -10,3 +10,6 @@ This repository contains a detailed sample app that implements MVP architecture 
  - Retrofit2
  - Espresso
  - Robolectric
+
+
+![Screenshot](https://raw.githubusercontent.com/limnid/android-mvp/master/misc/intro.gif)
