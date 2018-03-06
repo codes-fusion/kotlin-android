@@ -12,4 +12,4 @@ This repository contains a detailed sample app that implements MVP architecture 
  - Robolectric
 
 
-![Screenshot](https://raw.githubusercontent.com/limnid/android-mvp/master/misc/intro.gif)
+![Screenshot](https://raw.githubusercontent.com/limnid/android-mvp/master/misc/intro.gif =250x)
