@@ -1,6 +1,6 @@
-# Sample App. Android MVP Architecture
+# Sample. Android MVP Architecture
 
-This repository contains a detailed sample app that implements MVP architecture using:
+This repository contains a detailed sample application that implements MVP Architecture using:
 
  - Kotlin
  - Anko
@@ -11,4 +11,4 @@ This repository contains a detailed sample app that implements MVP architecture 
  - Espresso
  - Robolectric
 
-<img src="https://raw.githubusercontent.com/limnid/android-mvp/master/misc/intro.gif" width="250">
+<img src="https://raw.githubusercontent.com/limnid/android-sample/master/misc/intro.gif" width="250">
