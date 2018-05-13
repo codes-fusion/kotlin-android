@@ -11,4 +11,4 @@ This repository contains a detailed sample application that implements MVP Archi
  - Espresso
  - Robolectric
 
-<img src="https://raw.githubusercontent.com/limnid/android-sample/master/misc/intro.gif" width="250">
+<img src="https://raw.githubusercontent.com/limnid/android-sample/main/misc/intro.gif" width="250">
