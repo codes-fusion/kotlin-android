@@ -30,12 +30,15 @@ class ItemHolder(viewGroup: ViewGroup) : BaseHolder(UiItem().createAnko(viewGrou
             adapter.getCallback()?.onItemSelected(position, null)
         }
 
-        Picasso.with(adapter.getWeakContext()).cancelRequest(imageView)
-        Picasso.with(adapter.getWeakContext())
-                .load(item.companyLogo)
-                .placeholder(R.drawable.placeholder)
-                .error(R.drawable.placeholder)
-                .into(imageView)
+        val logoSize = item.companyLogo?.length ?: 0
+        if (logoSize > 0) {
+            Picasso.with(adapter.getWeakContext()).cancelRequest(imageView)
+            Picasso.with(adapter.getWeakContext())
+                    .load(item.companyLogo)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
+                    .into(imageView)
+        }
     }
 
     override fun onViewDetachedFromWindow(adapter: ViewAdapterImpl<*>, holder: RecyclerView.ViewHolder?) {}

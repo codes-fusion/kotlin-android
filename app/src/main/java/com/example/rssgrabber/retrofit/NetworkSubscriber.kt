@@ -1,7 +1,7 @@
 package com.example.rssgrabber.retrofit
 
-import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import io.reactivex.subscribers.DisposableSubscriber
+import retrofit2.HttpException
 
 class NetworkSubscriber : DisposableSubscriber<FeedData?>() {
 

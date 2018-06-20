@@ -40,6 +40,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(mToolbarView)
 
         val toolbarModule = ToolbarModule(this)
         val drawerModule = DrawerModule(this)
@@ -47,8 +48,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         getComponent()
             ?.drawerComponent(drawerModule, toolbarModule)
             ?.inject(this)
-
-        setSupportActionBar(mToolbarView)
 
         title = ""
         navigationDrawer.addSupportActionBar(supportActionBar)

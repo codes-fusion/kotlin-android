@@ -8,7 +8,6 @@ import com.example.rssgrabber.retrofit.interceptors.HeaderInterceptor
 import com.example.rssgrabber.retrofit.services.FeedService
 import com.example.rssgrabber.retrofit.services.PageService
 import com.google.gson.GsonBuilder
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
@@ -16,9 +15,14 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 @Module
 class NetModule {
@@ -48,6 +52,22 @@ class NetModule {
         val builder = OkHttpClient.Builder()
         builder.connectTimeout(60000, TimeUnit.MILLISECONDS)
         builder.addInterceptor(HeaderInterceptor())
+
+        // NOTE: Need because the app is not signed
+        val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+            override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+            override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+            override fun getAcceptedIssuers(): Array<X509Certificate> {
+                return emptyArray()
+            }
+        })
+
+        val sslContext = SSLContext.getInstance("SSL")
+        sslContext.init(null, trustAllCerts, java.security.SecureRandom())
+        val sslSocketFactory = sslContext.socketFactory
+
+        builder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
+        builder.hostnameVerifier { hostname, session -> true }
 
         if (AppInstance.DEBUG) {
             builder.addInterceptor(loggingInterceptor)

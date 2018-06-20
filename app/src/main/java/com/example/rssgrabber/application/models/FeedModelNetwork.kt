@@ -1,5 +1,6 @@
 package com.example.rssgrabber.application.models
 
+import android.util.Log
 import com.example.rssgrabber.Backend
 import com.example.rssgrabber.database.FeedDao
 import com.example.rssgrabber.database.FeedItemDao
@@ -7,7 +8,6 @@ import com.example.rssgrabber.database.FeedItemObj
 import com.example.rssgrabber.database.FeedObj
 import com.example.rssgrabber.retrofit.DataRequest
 import com.example.rssgrabber.retrofit.FeedData
-import com.example.rssgrabber.retrofit.entities.FeedItem
 import com.example.rssgrabber.retrofit.services.FeedService
 import com.example.rssgrabber.retrofit.services.PageService
 import io.reactivex.Flowable
@@ -23,68 +23,50 @@ class FeedModelNetwork: FeedModel {
     override var feed: FeedDao? = null
     override var feedItem: FeedItemDao? = null
 
-    private fun objFromFeedItem(obj: FeedItemObj, item: FeedItem) = with(obj) {
-        description = item.description
-        link = item.link
-        pubDate = item.pubDate
-        title = item.title
-    }
-
     /**
-     * Load RSS and save it to database
-     *
-     * @return feed's list as Flowable object
+     * Download RSS and save to database
      * */
     override fun getData(request: DataRequest): Flowable<FeedData?>? {
-        val url = request.url ?: ""
-        var networkData: FeedData? = null
-
-        return service?.get(url)
+        return service
+            ?.get(request.url ?: "")
             ?.subscribeOn(schedulerOfSubscriber)
-            ?.flatMap { item ->
-                networkData = item
-                networkData?.network = true
-                return@flatMap Flowable.just(feed?.getFirst())
-            }
-            ?.flatMap { items ->
-                when {
-                    items.isEmpty() -> {
-                        val feedObj = FeedObj()
-                        feedObj.name = networkData?.channel?.title
-                        feedObj.id = feed?.insert(feedObj) ?: 0
-                        return@flatMap Flowable.just(feedObj)
-                    }
-                    else -> return@flatMap Flowable.just(items.first())
+            ?.flatMap { feedData ->
+                val feeds = feed?.getFirst() ?: emptyList()
+                val feedObj: FeedObj
+
+                if (feeds.isEmpty()) {
+                    feedObj = FeedObj(feedData.channel?.title)
+                    feedObj.id = feed?.insert(feedObj) ?: 0
+                } else {
+                    feedObj = feeds.first()
                 }
-            }
-            ?.flatMap { item ->
-                val updateBulk = mutableListOf<FeedItemObj>()
-                networkData?.channel?.feedItems?.forEachIndexed { i, it ->
+
+                feedData.channel?.feedItems?.forEachIndexed { i, item ->
                     if (i > Backend.LIST_LIMIT - 1) return@forEachIndexed
-                    val items = feedItem?.findByFeed(item.id, it.link)
-                    val isEmpty = items?.isEmpty() ?: true
-                    when {
-                        isEmpty -> {
-                            val feedItemObj = FeedItemObj()
-                            objFromFeedItem(feedItemObj, it)
-                            feedItemObj.feedId = item.id
-                            feedItemObj.id = feedItem?.insert(feedItemObj) ?: 0
-                        }
-                        else -> {
-                            items?.firstOrNull()?.let {
-                                updateBulk.add(it)
-                            }
-                        }
+                    val feedItems = feedItem?.findByFeed(feedObj.id, item.link)
+
+                    feedItems?.isEmpty()?.let {
+                        val feedItemObj = FeedItemObj(
+                            description = feedObj.description,
+                            link = item.link,
+                            pubDate = item.pubDate,
+                            title = item.title,
+                            feedId = feedObj.id
+                        )
+                        feedItemObj.id = feedItem?.insert(feedItemObj) ?: 0
                     }
                 }
 
-                feedItem?.updateAll(*updateBulk.toTypedArray())
-                updateBulk.clear()
+                // feedItem?.updateAll(*bulkUpdate.toTypedArray())
+                // bulkUpdate.clear()
 
-                return@flatMap Flowable.just(networkData)
+                feedData.network = true
+
+                return@flatMap Flowable.just(feedData)
             }
             ?.onErrorReturn {
-                return@onErrorReturn FeedData()
+                Log.e("Network", it.message)
+                FeedData()
             }
             ?.observeOn(AndroidSchedulers.mainThread())
     }

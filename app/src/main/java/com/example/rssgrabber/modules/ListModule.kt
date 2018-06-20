@@ -4,9 +4,9 @@ import android.arch.lifecycle.ViewModelProviders
 import android.support.v4.app.FragmentActivity
 import com.example.rssgrabber.application.adapters.ViewAdapterImpl
 import com.example.rssgrabber.application.adapters.ViewAdapterItem
-import com.example.rssgrabber.application.interactors.FeedInteractor
-import com.example.rssgrabber.application.interactors.FeedInteractorImpl
-import com.example.rssgrabber.application.models.FeedModelAdditional
+import com.example.rssgrabber.application.presenters.FeedPresenter
+import com.example.rssgrabber.application.presenters.FeedPresenterImpl
+import com.example.rssgrabber.application.models.FeedModelMisc
 import com.example.rssgrabber.application.models.FeedModelDataBase
 import com.example.rssgrabber.application.models.FeedModelNetwork
 import com.example.rssgrabber.commons.ListScope
@@ -54,9 +54,9 @@ class ListModule(private var activity: FragmentActivity, private var tag: String
     fun provideFeedModelAdditional(
             feedItem: FeedItemDao, feed: FeedDao,
             mService: FeedService, mPageService: PageService):
-            FeedModelAdditional {
+            FeedModelMisc {
 
-        val model = FeedModelAdditional()
+        val model = FeedModelMisc()
         model.feed = feed
         model.feedItem = feedItem
         model.service = mService
@@ -83,16 +83,16 @@ class ListModule(private var activity: FragmentActivity, private var tag: String
     @Provides
     fun provideInteractor(
             network: FeedModelNetwork,
-            additional: FeedModelAdditional,
+            misc: FeedModelMisc,
             database: FeedModelDataBase,
             networkSubscriber: NetworkSubscriber):
-            FeedInteractor {
+            FeedPresenter {
 
         val presenter = ViewModelProviders
             .of(activity)
-            .get(tag ?: "DEFAULT", FeedInteractorImpl::class.java)
+            .get(tag ?: "DEFAULT", FeedPresenterImpl::class.java)
 
-        presenter.additionalModel = presenter.additionalModel ?: additional
+        presenter.additionalModel = presenter.additionalModel ?: misc
         presenter.networkModel = presenter.networkModel ?: network
         presenter.databaseModel = presenter.databaseModel ?: database
 

@@ -5,7 +5,7 @@ import com.example.rssgrabber.modules.ListModule
 import dagger.Subcomponent
 
 @ListScope
-@Subcomponent(modules = arrayOf(ListModule::class))
+@Subcomponent(modules = [(ListModule::class)])
 interface MainActivityUnitTestListComponent {
     fun inject(mainController: MainActivityUnitTest)
 }

@@ -10,11 +10,7 @@ import javax.inject.Singleton
 
 @ActivityScope
 @Singleton
-@Component(modules = arrayOf(
-    CommonModule::class,
-    NetModule::class,
-    DBModule::class
-))
+@Component(modules = [(CommonModule::class), (NetModule::class), (DBModule::class)])
 interface MainActivityUnitTestComponent {
     fun listComponent(listModule: ListModule): MainActivityUnitTestListComponent
 }

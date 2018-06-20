@@ -7,10 +7,7 @@ import com.example.rssgrabber.modules.ToolbarModule
 import dagger.Subcomponent
 
 @ToolbarScope
-@Subcomponent(modules = arrayOf(
-        DrawerModule::class,
-        ToolbarModule::class
-))
+@Subcomponent(modules = [(DrawerModule::class), (ToolbarModule::class)])
 interface DrawerComponent {
     fun inject(activity: MainActivity)
 }

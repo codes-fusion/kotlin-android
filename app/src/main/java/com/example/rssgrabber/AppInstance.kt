@@ -39,7 +39,7 @@ open class AppInstance : MultiDexApplication(), AppInstanceBridge {
             ?.networkStateComponent(NetworkStateModule(this))
             ?.inject(this)
 
-        RxJavaPlugins.setErrorHandler({ error -> Log.e("RxJavaPlugins", "Catch error") })
+        RxJavaPlugins.setErrorHandler { Log.e("RxJavaPlugins", "Catch error") }
 
         mNetworkObservables = mutableMapOf()
         networkState.subscribe { state ->

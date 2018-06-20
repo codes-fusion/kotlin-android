@@ -1,10 +1,9 @@
 package com.example.rssgrabber.application.models
 
+import android.util.Log
 import com.example.rssgrabber.Backend
 import com.example.rssgrabber.database.FeedDao
 import com.example.rssgrabber.database.FeedItemDao
-import com.example.rssgrabber.database.FeedItemObj
-import com.example.rssgrabber.database.FeedObj
 import com.example.rssgrabber.retrofit.DataRequest
 import com.example.rssgrabber.retrofit.FeedData
 import com.example.rssgrabber.retrofit.entities.FeedChannel
@@ -14,6 +13,7 @@ import com.example.rssgrabber.retrofit.services.PageService
 import io.reactivex.Flowable
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 
 class FeedModelDataBase : FeedModel {
@@ -24,66 +24,76 @@ class FeedModelDataBase : FeedModel {
     override var feed: FeedDao? = null
     override var feedItem: FeedItemDao? = null
 
-    private fun feedItemFromObj(item: FeedItem, obj: FeedItemObj) = with(item) {
-        id = obj.id
-        title = obj.title
-        link = obj.link
-        description = obj.description
-        pubDate = obj.pubDate
-        companyAbout = obj.companyAbout
-        companyLogo = obj.companyLogo
-        companyName = obj.companyName
-        vacancyDescription = obj.vacancyDescription
-        vacancyTitle = obj.vacancyTitle
-        date = obj.date
-        readyToRemote = obj.readyToRemote
-        salary = obj.salary
-        location = obj.location
-        views = obj.views
-        skils = obj.skils
-    }
+    private fun getFeed() =
+            Flowable
+                .fromCallable { feed?.getFirst() }
+                .flatMap { Flowable.just(it.first()) }
 
-    private fun feedFromObj(item: FeedData, obj: FeedObj) = item.channel?.apply {
-        image = obj.image
-        description = obj.description
-        siteTitle = obj.jobsTitle
-        divisions = obj.divisions
-        title = obj.name
-        divisions = obj.divisions
+    private fun getChannel() =
+            getFeed()
+                .flatMap {
+                    Flowable.just(FeedChannel().apply {
+                        image = it.image
+                        description = it.description
+                        siteTitle = it.jobsTitle
+                        divisions = it.divisions
+                        title = it.name
+                        divisions = it.divisions
+                    })
+                }
+
+    private fun getFeedItems(request: DataRequest) =
+            getFeed()
+                .flatMap { it ->
+                    val feedItems = if (request.id > 0) {
+                        feedItem?.loadAllByIds(longArrayOf(request.id))
+                    } else {
+                        feedItem?.findAllByFeed(it.id, Backend.LIST_LIMIT, 0)
+                    }
+
+                    Flowable.just(feedItems?.map {
+                        FeedItem(
+                            id = it.id,
+                            title = it.title,
+                            link = it.link,
+                            description = it.vacancyDescription,
+                            pubDate = it.pubDate,
+                            companyAbout = it.companyAbout,
+                            companyLogo = it.companyLogo,
+                            companyName = it.companyName,
+                            vacancyDescription = it.vacancyDescription,
+                            vacancyTitle = it.vacancyTitle,
+                            date = it.date,
+                            readyToRemote = it.readyToRemote,
+                            salary = it.salary,
+                            location = it.location,
+                            views = it.views,
+                            skils = it.skils
+                        )
+                    })
     }
 
     /**
      * Fetch feed's data from database
-     *
-     * @return feed's list as Flowable object
      * */
     override fun getData(request: DataRequest): Flowable<FeedData?>? {
-        val feedData = FeedData()
-        feedData.channel = FeedChannel()
-        feedData.channel?.feedItems = arrayListOf()
+        return Flowable.zip(getChannel(), getFeedItems(request), BiFunction<FeedChannel?, List<FeedItem>?, FeedData?> {
+            channelResult, feedItemsResult ->
 
-        return Flowable.fromCallable { feed?.getFirst() }
-            ?.subscribeOn(schedulerOfSubscriber)
-            ?.flatMap { it ->
-                return@flatMap Flowable.just(it.first())
-            }
-            ?.flatMap { it ->
-                feedFromObj(feedData, it)
-                when {
-                    request.id > 0 -> return@flatMap Flowable.just(feedItem?.loadAllByIds(longArrayOf(request.id)))
-                    else -> return@flatMap Flowable.just(feedItem?.findAllByFeed(it.id, Backend.LIST_LIMIT, 0))
-                }
-            }
-            ?.doOnError {}
-            ?.flatMap { items ->
-                items.forEach {
-                    val feedItem = FeedItem()
-                    feedItemFromObj(feedItem, it)
-                    feedData.channel?.feedItems?.add(feedItem)
-                }
-                return@flatMap Flowable.just(feedData)
-            }
-            ?.onErrorReturn { return@onErrorReturn FeedData() }
-            ?.observeOn(AndroidSchedulers.mainThread())
+            val feedData = FeedData()
+            feedData.channel = FeedChannel()
+            feedData.channel?.feedItems = arrayListOf()
+
+            feedData.channel = channelResult
+            feedData.channel?.feedItems = feedItemsResult.toMutableList()
+
+            return@BiFunction feedData
+        })
+        .subscribeOn(schedulerOfSubscriber)
+        .onErrorReturn {
+            Log.e("Network", it.message)
+            FeedData()
+        }
+        .observeOn(AndroidSchedulers.mainThread())
     }
 }

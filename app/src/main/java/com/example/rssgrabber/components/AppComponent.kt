@@ -8,11 +8,7 @@ import javax.inject.Singleton
 
 @ActivityScope
 @Singleton
-@Component(modules = arrayOf(
-    CommonModule::class,
-    NetModule::class,
-    DBModule::class
-))
+@Component(modules = [(CommonModule::class), (NetModule::class), (DBModule::class)])
 interface AppComponent {
     fun drawerComponent(drawer: DrawerModule, toolbarModule: ToolbarModule): DrawerComponent
     fun toolbarComponent(toolbarModule: ToolbarModule): ToolbarComponent

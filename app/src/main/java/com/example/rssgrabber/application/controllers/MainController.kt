@@ -13,7 +13,7 @@ import com.example.rssgrabber.R
 import com.example.rssgrabber.application.adapters.ViewAdapterImpl
 import com.example.rssgrabber.application.adapters.ViewAdapterItem
 import com.example.rssgrabber.application.adapters.ViewAdapterListener
-import com.example.rssgrabber.application.interactors.FeedInteractor
+import com.example.rssgrabber.application.presenters.FeedPresenter
 import com.example.rssgrabber.application.ui.UiMainController
 import com.example.rssgrabber.modules.ListModule
 import com.example.rssgrabber.retrofit.DataRequest
@@ -37,7 +37,7 @@ class MainController : BaseController(),
     lateinit var utils: AndroidUtils
 
     @Inject
-    lateinit var interactor: FeedInteractor
+    lateinit var presenter: FeedPresenter
 
     init {
         retainViewMode = RetainViewMode.RELEASE_DETACH
@@ -45,7 +45,7 @@ class MainController : BaseController(),
 
     private fun loadFeed(forceUpdate: Boolean = false) {
         val request = DataRequest(url= Backend.RSS)
-        val started = interactor.fetchFeedList(request, forceUpdate)
+        val started = presenter.fetchFeedList(request, forceUpdate)
         if (started && !forceUpdate) {
             activityBridge?.setToolbarTitle(activity?.getString(R.string.loading))
             mPreloader?.show()
@@ -86,7 +86,7 @@ class MainController : BaseController(),
         super.onAttach(view)
         super.observeActivity()
         loadFeed()
-        interactor.observeFeed(this, Observer { item ->
+        presenter.observeFeed(this, Observer { item ->
             mRefreshLayout?.isRefreshing = false
             (item as DataResponse?)?.data?.let {
                 mPreloader?.hide()

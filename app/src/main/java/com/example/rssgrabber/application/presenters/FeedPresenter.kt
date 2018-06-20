@@ -1,11 +1,11 @@
-package com.example.rssgrabber.application.interactors
+package com.example.rssgrabber.application.presenters
 
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.Observer
 import com.example.rssgrabber.application.models.FeedModel
 import com.example.rssgrabber.retrofit.DataRequest
 
-interface FeedInteractor {
+interface FeedPresenter {
     var databaseModel: FeedModel?
     var networkModel: FeedModel?
     var additionalModel: FeedModel?

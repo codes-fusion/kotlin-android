@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentActivity
 import com.example.rssgrabber.application.adapters.ViewAdapterImpl
 import com.example.rssgrabber.application.adapters.ViewAdapterItem
 import com.example.rssgrabber.application.controllers.MainController
-import com.example.rssgrabber.application.interactors.FeedInteractor
+import com.example.rssgrabber.application.presenters.FeedPresenter
 import com.example.rssgrabber.application.models.FeedModelDataBase
 import com.example.rssgrabber.modules.ListModule
 import com.example.rssgrabber.retrofit.DataRequest
@@ -91,7 +91,7 @@ class MainActivityUnitTest {
     var utils: AndroidUtils? = null
 
     @Inject @JvmField
-    var interactor: FeedInteractor? = null
+    var presenter: FeedPresenter? = null
 
     @Inject @JvmField
     var database: FeedModelDataBase? = null
@@ -125,20 +125,20 @@ class MainActivityUnitTest {
     @Test
     @Throws(Exception::class)
     fun shouldHavePresenter() {
-        assertNotNull(interactor)
+        assertNotNull(presenter)
     }
 
     @Test
     @Throws(Exception::class)
     fun feed() {
-        assertNotNull(interactor)
+        assertNotNull(presenter)
 
         val request = DataRequest(url=Backend.RSS)
-        val started = interactor?.fetchFeedList(request, true) ?: false
+        val started = presenter?.fetchFeedList(request, true) ?: false
 
         assertTrue(started)
 
-        interactor?.observeFeed(activity as FragmentActivity, Observer {
+        presenter?.observeFeed(activity as FragmentActivity, Observer {
             val data = (it as DataResponse?)?.data
             assertNotNull(data)
 

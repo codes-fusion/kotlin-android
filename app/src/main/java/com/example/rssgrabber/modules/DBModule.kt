@@ -22,7 +22,6 @@ class DBModule {
     @Singleton
     fun provideFeedDatabase(application: Context?): FeedDatabase {
         return Room.databaseBuilder(application!!, FeedDatabase::class.java, "feed.db")
-                .addMigrations(MIGRATION_1)
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build()

@@ -5,5 +5,5 @@ import com.example.rssgrabber.modules.ToolbarModule
 import dagger.Subcomponent
 
 @ToolbarScope
-@Subcomponent(modules = arrayOf(ToolbarModule::class))
+@Subcomponent(modules = [(ToolbarModule::class)])
 interface ToolbarComponent

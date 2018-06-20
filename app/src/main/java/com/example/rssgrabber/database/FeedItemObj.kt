@@ -4,64 +4,93 @@ import android.arch.persistence.room.*
 
 @Entity(
     tableName = "feed_items",
-    indices = arrayOf(Index("pub_date"), Index("feed_id"), Index(value = *arrayOf("feed_id", "link"), unique = true)),
-    foreignKeys = arrayOf(ForeignKey(entity = FeedObj::class, parentColumns = arrayOf("id"), childColumns = arrayOf("feed_id")))
+    indices = [
+        (Index("pub_date")),
+        (Index("feed_id")),
+        (Index(value = arrayOf("feed_id", "link"), unique = true))
+    ],
+    foreignKeys = [
+        (ForeignKey(entity = FeedObj::class, parentColumns = arrayOf("id"), childColumns = arrayOf("feed_id")))
+    ]
 )
 data class FeedItemObj(
     @PrimaryKey(autoGenerate = true)
-    var id: Long = 0,
+    var id: Long,
 
     @ColumnInfo(name = "pub_date")
-    var pubDate: String? = null,
+    var pubDate: String,
 
     @ColumnInfo(name = "title")
-    var title: String? = null,
+    var title: String,
 
     @ColumnInfo(name = "link")
-    var link: String? = null,
+    var link: String,
 
     @ColumnInfo(name = "description")
-    var description: String? = null,
+    var description: String,
 
     @ColumnInfo(name = "has_meta_info")
-    var hasMetaInfo: Int = 0,
+    var hasMetaInfo: Int,
 
     @ColumnInfo(name = "feed_id")
-    var feedId: Long = 0,
+    var feedId: Long,
 
     @ColumnInfo(name = "date")
-    var date: String? = null,
+    var date: String,
 
     @ColumnInfo(name = "views")
-    var views: String? = null,
+    var views: String,
 
     @ColumnInfo(name = "location")
-    var salary: String? = null,
+    var salary: String,
 
     @ColumnInfo(name = "salary")
-    var location: String? = null,
+    var location: String,
 
     @ColumnInfo(name = "ready_to_remote")
-    var readyToRemote: String? = null,
+    var readyToRemote: String,
 
     @ColumnInfo(name = "company_name")
-    var companyName: String? = null,
+    var companyName: String,
 
     @ColumnInfo(name = "company_about")
-    var companyAbout: String? = null,
+    var companyAbout: String,
 
     @ColumnInfo(name = "company_logo")
-    var companyLogo: String? = null,
+    var companyLogo: String,
 
     @ColumnInfo(name = "skils")
-    var skils: String? = null,
+    var skils: String,
 
     @ColumnInfo(name = "company_url")
-    var companyUrl: String? = null,
+    var companyUrl: String,
 
     @ColumnInfo(name = "vacancy_description")
-    var vacancyDescription: String? = null,
+    var vacancyDescription: String,
 
     @ColumnInfo(name = "vacancy_title")
-    var vacancyTitle: String? = null
-)
+    var vacancyTitle: String
+) {
+    @Ignore
+    constructor(description: String?, link: String?, pubDate: String?, title: String?, feedId: Long) : this(
+        id = 0,
+        feedId = feedId,
+        description = description ?: "",
+        title = title ?: "",
+        link = link ?: "",
+        date = pubDate ?: "",
+        pubDate = pubDate ?: "",
+        companyAbout = "",
+        companyLogo = "",
+        companyName = "",
+        companyUrl = "",
+        hasMetaInfo = 0,
+        location = "",
+        readyToRemote = "",
+        salary = "",
+        skils = "",
+        vacancyDescription = "",
+        vacancyTitle = "",
+        views = ""
+    )
+}

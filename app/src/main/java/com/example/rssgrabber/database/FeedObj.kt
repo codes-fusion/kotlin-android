@@ -1,30 +1,38 @@
 package com.example.rssgrabber.database
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Index
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 
-@Entity(tableName = "feeds", indices = arrayOf(Index("name")))
+@Entity(tableName = "feeds", indices = [(Index("name"))])
 data class FeedObj(
     @PrimaryKey(autoGenerate = true)
-    var id: Long = 0,
+    var id: Long,
 
     @ColumnInfo(name = "name")
-    var name: String? = null,
+    var name: String,
 
     @ColumnInfo(name = "jobs_title")
-    var jobsTitle: String? = null,
+    var jobsTitle: String,
 
     @ColumnInfo(name = "site_title")
-    var siteTitle: String? = null,
+    var siteTitle: String,
 
     @ColumnInfo(name = "description")
-    var description: String? = null,
+    var description: String,
 
     @ColumnInfo(name = "image")
-    var image: String? = null,
+    var image: String,
 
     @ColumnInfo(name = "divisions")
-    var divisions: String? = null
-)
+    var divisions: String
+) {
+    @Ignore
+    constructor(name: String?) : this(
+        id = 0,
+        name = name ?: "",
+        description = "",
+        divisions = "",
+        image = "",
+        jobsTitle = "",
+        siteTitle = ""
+    )
+}

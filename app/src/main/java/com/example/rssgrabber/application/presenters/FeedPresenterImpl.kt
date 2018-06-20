@@ -1,4 +1,4 @@
-package com.example.rssgrabber.application.interactors
+package com.example.rssgrabber.application.presenters
 
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.MutableLiveData
@@ -15,7 +15,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class FeedInteractorImpl : ViewModel(), FeedInteractor, LoadListener {
+class FeedPresenterImpl : ViewModel(), FeedPresenter, LoadListener {
 
     private var mLiveData = MutableLiveData<Any>()
     private val mCompositeSubscription: CompositeDisposable? = CompositeDisposable()
@@ -51,7 +51,7 @@ class FeedInteractorImpl : ViewModel(), FeedInteractor, LoadListener {
                             .takeLast(1)
                 }
 
-                mCompositeSubscription?.add(mSubscription)
+                mCompositeSubscription?.add(mSubscription!!)
                 return true
             }
         }
@@ -63,7 +63,6 @@ class FeedInteractorImpl : ViewModel(), FeedInteractor, LoadListener {
 
     /**
      * Fetch feed's details
-     *
      * @param request Request object
      * */
     override fun fetchFeedDetail(request: DataRequest) {
@@ -83,7 +82,7 @@ class FeedInteractorImpl : ViewModel(), FeedInteractor, LoadListener {
                             ?.subscribeOn(mSchedulerOfSubscriber)
                 }
 
-                mCompositeSubscription?.add(mSubscription)
+                mCompositeSubscription?.add(mSubscription!!)
             }
         }
     }
@@ -99,14 +98,12 @@ class FeedInteractorImpl : ViewModel(), FeedInteractor, LoadListener {
 
     /**
      * Before loading
-     *
      * @param dataRequest Request object
      * */
     override fun onLoadingStart(dataRequest: DataRequest) {}
 
     /**
      * Display data after loading complete
-     *
      * @param dataResponse Response object
      * */
     override fun onLoadingSuccess(dataResponse: DataResponse) {
@@ -117,7 +114,6 @@ class FeedInteractorImpl : ViewModel(), FeedInteractor, LoadListener {
 
     /**
      * Display error message when load fail
-     *
      * @param dataResponse Response object
      * */
     override fun onLoadingError(dataResponse: DataResponse) {

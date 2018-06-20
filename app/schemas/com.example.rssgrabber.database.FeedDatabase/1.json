@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "fb6bdfbb5626539edf46e74da1041f85",
+    "identityHash": "d091fe4e4abd9f5da2c0f1c06c68d087",
     "entities": [
       {
         "tableName": "feed_items",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `pub_date` TEXT, `title` TEXT, `link` TEXT, `description` TEXT, `has_meta_info` INTEGER NOT NULL, `feed_id` INTEGER NOT NULL, `date` TEXT, `views` TEXT, `location` TEXT, `salary` TEXT, `ready_to_remote` TEXT, `company_name` TEXT, `company_about` TEXT, `company_logo` TEXT, `skils` TEXT, `company_url` TEXT, `vacancy_description` TEXT, `vacancy_title` TEXT, FOREIGN KEY(`feed_id`) REFERENCES `feeds`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `pub_date` TEXT NOT NULL, `title` TEXT NOT NULL, `link` TEXT NOT NULL, `description` TEXT NOT NULL, `has_meta_info` INTEGER NOT NULL, `feed_id` INTEGER NOT NULL, `date` TEXT NOT NULL, `views` TEXT NOT NULL, `location` TEXT NOT NULL, `salary` TEXT NOT NULL, `ready_to_remote` TEXT NOT NULL, `company_name` TEXT NOT NULL, `company_about` TEXT NOT NULL, `company_logo` TEXT NOT NULL, `skils` TEXT NOT NULL, `company_url` TEXT NOT NULL, `vacancy_description` TEXT NOT NULL, `vacancy_title` TEXT NOT NULL, FOREIGN KEY(`feed_id`) REFERENCES `feeds`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -18,25 +18,25 @@
             "fieldPath": "pubDate",
             "columnName": "pub_date",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "title",
             "columnName": "title",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "link",
             "columnName": "link",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "description",
             "columnName": "description",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "hasMetaInfo",
@@ -54,73 +54,73 @@
             "fieldPath": "date",
             "columnName": "date",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "views",
             "columnName": "views",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "salary",
             "columnName": "location",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "location",
             "columnName": "salary",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "readyToRemote",
             "columnName": "ready_to_remote",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "companyName",
             "columnName": "company_name",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "companyAbout",
             "columnName": "company_about",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "companyLogo",
             "columnName": "company_logo",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "skils",
             "columnName": "skils",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "companyUrl",
             "columnName": "company_url",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "vacancyDescription",
             "columnName": "vacancy_description",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "vacancyTitle",
             "columnName": "vacancy_title",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -172,7 +172,7 @@
       },
       {
         "tableName": "feeds",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `jobs_title` TEXT, `site_title` TEXT, `description` TEXT, `image` TEXT, `divisions` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `jobs_title` TEXT NOT NULL, `site_title` TEXT NOT NULL, `description` TEXT NOT NULL, `image` TEXT NOT NULL, `divisions` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -184,37 +184,37 @@
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "jobsTitle",
             "columnName": "jobs_title",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "siteTitle",
             "columnName": "site_title",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "description",
             "columnName": "description",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "image",
             "columnName": "image",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "divisions",
             "columnName": "divisions",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -238,7 +238,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"fb6bdfbb5626539edf46e74da1041f85\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"d091fe4e4abd9f5da2c0f1c06c68d087\")"
     ]
   }
 }
