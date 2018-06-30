@@ -1,4 +1,4 @@
-# Sample. Android MVP Architecture
+# Example. Android RSS-client
 
 This repository contains a detailed sample application that implements MVP Architecture using:
 
